@@ -9,9 +9,8 @@ GRANT ALL ON student_passwords.* TO 'passwords_user'@'localhost';
 
 USE student_passwords;
 
-SET block_encryption_mode = 'aes-256-cbc';
-SET @key_str = UNHEX(SHA2('my secret passphrase', 512));
-SET @init_vector = RANDOM_BYTES(16);
+SET block_encryption_mode = 'aes-128-ecb';
+SET @key_str = 'mysecretpass1234';
 
 CREATE TABLE IF NOT EXISTS users (
   user_id     INT               NOT NULL AUTO_INCREMENT,
@@ -64,13 +63,13 @@ VALUES
 
 INSERT INTO accounts (user_id, site_id, password, comment)
 VALUES
-  (1, 1, AES_ENCRYPT('ebaypass1', @key_str, @init_vector), 'eBay login'),
-  (1, 2, AES_ENCRYPT('mgmsecure', @key_str, @init_vector), 'MGM Plus subscription'),
-  (2, 3, AES_ENCRYPT('letterboxd123', @key_str, @init_vector), 'Review movies'),
-  (2, 4, AES_ENCRYPT('foodpass', @key_str, @init_vector), 'Recipe ideas'),
-  (3, 5, AES_ENCRYPT('yt123', @key_str, @init_vector), 'YouTube login'),
-  (3, 6, AES_ENCRYPT('starzwatch', @key_str, @init_vector), 'Starz login'),
-  (4, 7, AES_ENCRYPT('paramountpw', @key_str, @init_vector), 'Paramount Plus login'),
-  (4, 8, AES_ENCRYPT('hbomaxpw', @key_str, @init_vector), 'HBO Max login'),
-  (5, 1, AES_ENCRYPT('shopping123', @key_str, @init_vector), 'marty eBay login'),
-  (5, 3, AES_ENCRYPT('letterb3', @key_str, @init_vector), 'marty letterboxd');
+  (1, 1, AES_ENCRYPT('ebaypass1', @key_str), 'eBay login'),
+  (1, 2, AES_ENCRYPT('mgmsecure', @key_str), 'MGM Plus subscription'),
+  (2, 3, AES_ENCRYPT('letterboxd123', @key_str), 'Review movies'),
+  (2, 4, AES_ENCRYPT('foodpass', @key_str), 'Recipe ideas'),
+  (3, 5, AES_ENCRYPT('yt123', @key_str), 'YouTube login'),
+  (3, 6, AES_ENCRYPT('starzwatch', @key_str), 'Starz login'),
+  (4, 7, AES_ENCRYPT('paramountpw', @key_str), 'Paramount Plus login'),
+  (4, 8, AES_ENCRYPT('hbomaxpw', @key_str), 'HBO Max login'),
+  (5, 1, AES_ENCRYPT('shopping123', @key_str), 'marty eBay login'),
+  (5, 3, AES_ENCRYPT('letterb3', @key_str), 'marty letterboxd');
