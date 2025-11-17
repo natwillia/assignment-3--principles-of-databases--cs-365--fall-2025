@@ -15,8 +15,8 @@ function searchTuples($keyword) {
 
     $encryptionKey = "mysecretpass1234";
 
-    $search =
-    "SELECT
+    $search = "
+    SELECT
         users.username,
         websites.site_name,
         websites.site_url,
@@ -48,8 +48,8 @@ function searchTuples($keyword) {
 function updateSiteUrl($site_name, $updated_url) {
     global $myCon;
 
-    $update =
-    "UPDATE websites
+    $update = "
+    UPDATE websites
     SET site_url = ?
     WHERE site_name LIKE ?";
 
@@ -60,9 +60,42 @@ function updateSiteUrl($site_name, $updated_url) {
     return $updateStatement->rowCount();
 }
 
-// Insert
+// Insert a tuple into the database
 function insertTuple($site_name, $site_url, $email, $username, $password, $comment) {
     global $myCon;
 
+    $encryptionKey = "mysecretpass1234";
+
+    // insert user
+    $insertUser = "
+        INSERT INTO users (username, first_name, last_name, email)
+        VALUES (?, '', '', ?)";
+
+    $insertUserStatement = $myCon->prepare($insertUser);
+    $insertUserStatement->execute([$username, $email]);
+    $user_id = $myCon->lastInsertId();
+
+    //insert website
+    $insertSite = "
+        INSERT INTO websites (site_name, site_url)
+        VALUES (?, ?)";
+
+    $insertSiteStatement = $myCon->prepare($insertSite);
+    $insertSiteStatement->execute([$site_name, $site_url]);
+    $site_id = $myCon->lastInsertId();
+
+    // insert account
+    $insertAcc = "
+        INSERT INTO accounts (user_id, site_id, password, comment)
+        VALUES(?, ?, AES_ENCRYPT(?, ?), ?)";
+
+    $insertAccStatement = $myCon->prepare($insertAcc);
+    return $insertAccStatement->execute([
+        $user_id,
+        $site_id,
+        $password,
+        $encryptionKey,
+        $comment
+    ]);
 }
 ?>

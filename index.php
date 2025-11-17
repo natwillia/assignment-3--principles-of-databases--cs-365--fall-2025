@@ -39,17 +39,48 @@
       </div>
     </form>
 
+    <!-- Insert Form -->
+    <form action="index.php" method="post">
+      <div>
+        <label for="site_name">Site Name:</label>
+        <input type="text" id="site_name" name="site_name" placeholder="Netflix" required>
+      </div>
+      <div>
+        <label for="url">URL:</label>
+        <input type="text" id="url" name="url" placeholder="https://www.netflix.com" required>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+      </div>
+      <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" placeholder="Username" required>
+      </div>
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Password" required>
+      </div>
+      <div>
+        <label for="comment">Comment:</label>
+        <textarea id="comment" name="comment" placeholder="Comment"></textarea>
+      </div>
+      <div>
+        <button id="insertButton" type="submit" name="insert">Insert</button>
+      </div>
+    </form>
+
 <?php
 require_once "includes/helpers.php";
 
-// Search
+// Search every component of the database and display all matching tuples in an HTML table
 if (isset($_POST["submit_search"])) {
 
     // Ex: if user types max the $keyword becomes %max%
     $keyword = "%" . $_POST["search"] . "%";
 
     // Call helper function to search tuples in the database
-    $results = searchTuples($keyword);
+    $foundTuples = searchTuples($keyword);
 
     // HTML table to display results and failed search queries
     echo "
@@ -67,32 +98,35 @@ if (isset($_POST["submit_search"])) {
       <tbody>
     ";
 
-// Loop through each returned row and display it in the table
-if ($results) {
-    foreach ($results as $row) {
+    /*
+    Display each row and show the decrypted password
+    to verify AES encryption/decryption is working
+    */
+    if ($foundTuples) {
+        foreach ($foundTuples as $entry) {
+            echo "
+            <tr>
+              <td>{$entry['username']}</td>
+              <td>{$entry['site_name']}</td>
+              <td>{$entry['site_url']}</td>
+              <td>{$entry['comment']}</td>
+              <td>{$entry['decrypted_password']}</td>
+            </tr>
+            ";
+        }
+    } else {
+        // Informs the user no results were found if the resulting array is empty
         echo "
         <tr>
-          <td>{$row['username']}</td>
-          <td>{$row['site_name']}</td>
-          <td>{$row['site_url']}</td>
-          <td>{$row['comment']}</td>
-          <td>{$row['decrypted_password']}</td>
+          <td colspan='5'><em>No results found</em></td>
         </tr>
         ";
     }
-} else {
-    // Informs the user no results were found if the resulting array is empty
-    echo "
-      <tr>
-        <td colspan='5'><em>No results found</em></td>
-      </tr>
-    ";
-}
 
-echo "
-  </tbody>
-</table>
-";
+    echo "
+      </tbody>
+    </table>
+    ";
 }
 
 // Inform the user they successfully cleared the results upon clicking Clear Results
@@ -100,10 +134,10 @@ if (isset($_POST["clear_results"])) {
     echo "<p>Results cleared</p>";
 }
 
-// Update
+// Update a site's URL using another component (site name) as a pattern match
 if (isset($_POST["submit_update"])) {
     $update_site_name = $_POST["update_site_name"];
-    $new_url   = $_POST["new_url"];
+    $new_url = $_POST["new_url"];
 
     $result = updateSiteUrl($update_site_name, $new_url);
 
@@ -115,8 +149,21 @@ if (isset($_POST["submit_update"])) {
     }
 }
 
-// Insert
+// Insert a new tuple
+if (isset($_POST["insert"])) {
+    $site_name = $_POST["site_name"];
+    $url = $_POST["url"];
+    $email = $_POST["email"];
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+    $comment = $_POST["comment"];
 
+    $insert = insertTuple($site_name, $url, $email, $username, $password, $comment);
+
+    // Redirect to the same page to prevent duplicate form submissions
+    header("Location: " . $_SERVER["PHP_SELF"]);
+    exit;
+}
 ?>
   </body>
 </html>
