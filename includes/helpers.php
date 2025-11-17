@@ -66,7 +66,7 @@ function insertTuple($site_name, $site_url, $email, $username, $password, $comme
 
     $encryptionKey = "mysecretpass1234";
 
-    // insert user
+    // Insert user
     $insertUser = "
         INSERT INTO users (username, first_name, last_name, email)
         VALUES (?, '', '', ?)";
@@ -75,7 +75,7 @@ function insertTuple($site_name, $site_url, $email, $username, $password, $comme
     $insertUserStatement->execute([$username, $email]);
     $user_id = $myCon->lastInsertId();
 
-    //insert website
+    // Insert website
     $insertSite = "
         INSERT INTO websites (site_name, site_url)
         VALUES (?, ?)";
@@ -84,7 +84,7 @@ function insertTuple($site_name, $site_url, $email, $username, $password, $comme
     $insertSiteStatement->execute([$site_name, $site_url]);
     $site_id = $myCon->lastInsertId();
 
-    // insert account
+    // Insert account
     $insertAcc = "
         INSERT INTO accounts (user_id, site_id, password, comment)
         VALUES(?, ?, AES_ENCRYPT(?, ?), ?)";
@@ -97,5 +97,34 @@ function insertTuple($site_name, $site_url, $email, $username, $password, $comme
         $encryptionKey,
         $comment
     ]);
+}
+
+// Delete a tuple based on site name pattern match
+function deleteTuple($site_name) {
+    global $myCon;
+
+    // Delete from accounts table
+    $deleteAcc = "
+    DELETE accounts
+    FROM accounts
+    JOIN websites ON accounts.site_id = websites.site_id
+    WHERE websites.site_name LIKE ?";
+
+    $delAccStatement = $myCon->prepare($deleteAcc);
+    $delAccStatement->execute([$site_name]);
+    $deletedAccounts = $delAccStatement->rowCount();
+
+    // Delete the website
+    $deleteWebsite = "
+    DELETE FROM websites
+    WHERE site_name LIKE ?";
+
+    $delSiteStatement = $myCon->prepare($deleteWebsite);
+    $delSiteStatement->execute([$site_name]);
+    $deletedWebsites = $delSiteStatement->rowCount();
+
+    // Total deleted rows
+    return $deletedAccounts + $deletedWebsites;
+
 }
 ?>

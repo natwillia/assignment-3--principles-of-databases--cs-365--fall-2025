@@ -77,7 +77,7 @@
         <input type="text" id="delete_site_name" name="delete_site_name" placeholder="Site Name to Delete" required>
       </div>
       <div>
-        <button type="submit" name="delete_submit">Delete Entry</button>
+        <button type="submit" name="submit_delete">Delete Entry</button>
       </div>
     </form>
 
@@ -174,6 +174,18 @@ if (isset($_POST["insert"])) {
     // Redirect to the same page to prevent duplicate form submissions
     header("Location: " . $_SERVER["PHP_SELF"]);
     exit;
+}
+
+// Delete a tuple based on a pattern match with site name
+if (isset($_POST["submit_delete"])) {
+    $site_name = $_POST["delete_site_name"];
+    $delete = deleteTuple($site_name);
+
+    if ($delete > 0) {
+        echo "<p>Successfully deleted entry for: $site_name</p>";
+    } else {
+        echo "<p>Failed to delete: Site name may not exist.</p>";
+    }
 }
 ?>
   </body>
