@@ -10,11 +10,13 @@ $myCon = new PDO(
 );
 
 // Search all components of the database for keyword matches
-function searchTuples($keyword, $encryptionKey) {
+function searchTuples($keyword) {
     global $myCon;
 
-    $search = "
-    SELECT
+    $encryptionKey = "mysecretpass1234";
+
+    $search =
+    "SELECT
         users.username,
         websites.site_name,
         websites.site_url,
@@ -27,18 +29,40 @@ function searchTuples($keyword, $encryptionKey) {
        OR websites.site_name LIKE ?
        OR websites.site_url LIKE ?
        OR users.email LIKE ?
-       OR accounts.comment LIKE ?
-";
+       OR accounts.comment LIKE ?";
 
+    // Prepare the SQL statement
+    $searchStatement = $myCon->prepare($search);
 
-    // Prepare the sql query
-    $searchQuery = $myCon->prepare($search);
-    // Execute the prepared staemnt and fill each  placeholder in order
-    $searchQuery->execute([
+    // Execute the prepared statement and fill each placeholder in order
+    $searchStatement->execute([
         $encryptionKey,
         $keyword, $keyword, $keyword, $keyword, $keyword
     ]);
 
-    // Return all rows that are matching as associative arrays
-    return $searchQuery->fetchAll(PDO::FETCH_ASSOC);
+    // Return all rows that match the keywords as associative arrays
+    return $searchStatement->fetchAll(PDO::FETCH_ASSOC);
 }
+
+// Update the url of a site name that matches the pattern
+function updateSiteUrl($site_name, $updated_url) {
+    global $myCon;
+
+    $update =
+    "UPDATE websites
+    SET site_url = ?
+    WHERE site_name LIKE ?";
+
+    $updateStatement = $myCon->prepare($update);
+    $updateStatement->execute([$updated_url, $site_name]);
+
+    // Return number of rows affected
+    return $updateStatement->rowCount();
+}
+
+// Insert
+function insertTuple($site_name, $site_url, $email, $username, $password, $comment) {
+    global $myCon;
+
+}
+?>

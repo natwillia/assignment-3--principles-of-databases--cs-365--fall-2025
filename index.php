@@ -24,24 +24,37 @@
       </div>
     </form>
 
+    <!-- Update Form -->
+    <form action="index.php" method="post">
+      <div>
+        <label for="update_site_name">Site Name:</label>
+        <input type="text" id="update_site_name" name="update_site_name" placeholder="Targeted Site Name" required>
+      </div>
+      <div>
+        <label for="new_url">New URL:</label>
+        <input type="text" id="new_url" name="new_url" placeholder="Updated URL" required>
+      </div>
+      <div>
+        <button type="submit" name="submit_update">Update URL</button>
+      </div>
+    </form>
+
 <?php
 require_once "includes/helpers.php";
 
 // Search
 if (isset($_POST["submit_search"])) {
 
-    // Ex: if user types food the $keyword becomes %food%
+    // Ex: if user types max the $keyword becomes %max%
     $keyword = "%" . $_POST["search"] . "%";
-    $encryptionKey = "mysecretpass1234";
 
     // Call helper function to search tuples in the database
-    $results = searchTuples($keyword, $encryptionKey);
+    $results = searchTuples($keyword);
 
-    // html table to display results and failed search queries
+    // HTML table to display results and failed search queries
     echo "
-    <table border='1'>
+    <table>
       <caption>Search Results</caption>
-
       <thead>
         <tr>
           <th scope='col'>Username</th>
@@ -51,30 +64,24 @@ if (isset($_POST["submit_search"])) {
           <th scope='col'>Password</th>
         </tr>
       </thead>
-
       <tbody>
     ";
 
 // Loop through each returned row and display it in the table
 if ($results) {
     foreach ($results as $row) {
-
-        $plain  = $row['decrypted_password'];
-        // hides the decrypted password in the browser and adapts the mask to its length
-        $maskedPass = str_repeat('*', strlen($plain));
-
         echo "
         <tr>
           <td>{$row['username']}</td>
           <td>{$row['site_name']}</td>
           <td>{$row['site_url']}</td>
           <td>{$row['comment']}</td>
-          <td>$maskedPass</td>
+          <td>{$row['decrypted_password']}</td>
         </tr>
         ";
     }
 } else {
-    //Informs the user no results were found if the resulting array is empty
+    // Informs the user no results were found if the resulting array is empty
     echo "
       <tr>
         <td colspan='5'><em>No results found</em></td>
@@ -90,8 +97,25 @@ echo "
 
 // Inform the user they successfully cleared the results upon clicking Clear Results
 if (isset($_POST["clear_results"])) {
-    echo "<p>Results cleared.</p>";
+    echo "<p>Results cleared</p>";
 }
+
+// Update
+if (isset($_POST["submit_update"])) {
+    $update_site_name = $_POST["update_site_name"];
+    $new_url   = $_POST["new_url"];
+
+    $result = updateSiteUrl($update_site_name, $new_url);
+
+    // If at least one row was updated the user will see a success message
+    if ($result > 0) {
+        echo "<p>URL successfully updated for: $update_site_name</p>";
+    } else {
+        echo "<p>Update failed. Site Name may not exist or match in the database.</p>";
+    }
+}
+
+// Insert
 
 ?>
   </body>
