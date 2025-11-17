@@ -70,6 +70,17 @@
       </div>
     </form>
 
+    <!-- Delete Form -->
+    <form action="index.php" method="post">
+      <div>
+        <label for="delete_site_name">Site Name:</label>
+        <input type="text" id="delete_site_name" name="delete_site_name" placeholder="Site Name to Delete" required>
+      </div>
+      <div>
+        <button type="submit" name="delete_submit">Delete Entry</button>
+      </div>
+    </form>
+
 <?php
 require_once "includes/helpers.php";
 
