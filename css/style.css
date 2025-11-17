@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');
+
+body {
+  background-color: indigo;
+  font-family: 'PT Serif', serif;
+  color: white;
+}
+
+header h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin: 40px 0;
+  color: rgb(7, 112, 7);
+  text-shadow: 3px 3px black;
+  padding-top: 30px;
+  padding-bottom: 15px;
+}
+
+header h1:hover {
+  color: yellowgreen;
+}
+
+form {
+  background-color: rebeccapurple;
+  width: 900px;
+  margin: 30px auto;
+  padding: 25px;
+  border-radius: 20px;
+  border: 2px solid black;
+  box-shadow: 4px 4px black;
+}
+
+form label {
+  display: block;
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  color: rgb(232, 179, 32);
+  text-shadow: 2px 2px black;
+}
+
+form input,
+form textarea {
+  width: 95%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  border: 2px solid white;
+  background-color: #4b0082;
+  color: white;
+  font-size: 1.1rem;
+}
+
+form input:hover,
+form textarea:hover {
+  background-color: #5a00a3;
+}
+
+form button {
+  padding: 10px 25px;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  border: 2px solid black;
+  background-color: rgb(190, 80, 179);
+  color: white;
+  cursor: pointer;
+  text-shadow: 2px 2px black;
+}
+
+form button:hover {
+  background-color: rgb(150, 50, 150);
+}
+
+table {
+  width: 90%;
+  margin: 30px auto;
+  border-collapse: collapse;
+  background-color: rebeccapurple;
+  border: 2px solid black;
+}
+
+table th {
+  background-color: rgb(6, 156, 24);
+  color: white;
+  text-shadow: 2px 2px black;
+  padding: 12px;
+  font-size: 1.3rem;
+  border: 2px solid black;
+}
+
+table td {
+  padding: 20px;
+  border: 2px solid black;
+  font-size: 1.1rem;
+}
+
+.message {
+  background-color: rebeccapurple;
+  text-align: center;
+  width: 900px;
+  margin: 20px auto;
+  padding: 15px 20px;
+  color: rgb(232, 179, 32);
+  border: 2px solid black;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  text-shadow: 2px 2px black;
+  box-shadow: 4px 4px black;
+}
+
+table caption {
+  color: rgb(232, 179, 32);
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-shadow: 2px 2px black;
+  padding: 15px 0;
+  margin-top: 25px;
+  margin-bottom: 20px;
+}

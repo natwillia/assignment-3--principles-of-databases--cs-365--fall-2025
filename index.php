@@ -142,7 +142,7 @@ if (isset($_POST["submit_search"])) {
 
 // Inform the user they successfully cleared the results upon clicking Clear Results
 if (isset($_POST["clear_results"])) {
-    echo "<p>Results cleared</p>";
+    echo "<p class='message'>Results cleared</p>";
 }
 
 // Update a site's URL using another component (site name) as a pattern match
@@ -154,9 +154,9 @@ if (isset($_POST["submit_update"])) {
 
     // If at least one row was updated the user will see a success message
     if ($result > 0) {
-        echo "<p>URL successfully updated for: $update_site_name</p>";
+        echo "<p class='message'>URL successfully updated for: $update_site_name</p>";
     } else {
-        echo "<p>Update failed. Site Name may not exist or match in the database.</p>";
+        echo "<p class='message'>Update failed. Site Name may not exist or match in the database.</p>";
     }
 }
 
@@ -182,9 +182,9 @@ if (isset($_POST["submit_delete"])) {
     $delete = deleteTuple($site_name);
 
     if ($delete > 0) {
-        echo "<p>Successfully deleted entry for: $site_name</p>";
+        echo "<p class='message'>Successfully deleted entry for: $site_name</p>";
     } else {
-        echo "<p>Failed to delete: Site name may not exist.</p>";
+        echo "<p class='message'>Failed to delete: Site name may not exist.</p>";
     }
 }
 ?>
